@@ -13,11 +13,11 @@ import { Rol } from './roles/rol.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '1234',
-      database: 'asistencia_db',
+      host: process.env.HOST || 'localhost',
+      port: parseInt(process.env.PORT) || 3306,
+      username: process.env.USER || 'root', 
+      password: process.env.PASSWORD || '1234',
+      database: process.env.DATABASE || 'asistencia_db',
       entities: [User, Rol],
       synchronize: true,
     }),
