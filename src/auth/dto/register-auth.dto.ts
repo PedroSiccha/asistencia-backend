@@ -14,10 +14,9 @@ export class RegisterAuthDto {
       @MinLength(8, { message: 'El DNI debe contar con mínimo 8 números' })
       dni: string;
 
-      @IsNotEmpty()
       @IsString()
       @IsEmail()
-      email: string;
+      email?: string = null;
 
       @IsNotEmpty()
       @IsString()

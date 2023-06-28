@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { hash } from "bcrypt";
 import { Rol } from 'src/roles/rol.entity';
+import { Asistencia } from 'src/asistencia/asistencia.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -16,20 +17,35 @@ export class User {
   @Column()
   dni: string;
 
-  @Column({ unique: true })
-  email: string;
+  @Column()
+  email?: string = null;
 
   @Column({ unique: true })
   phone: string;
-
-  @Column({ nullable: true })
-  image: string;
 
   @Column({ nullable: true })
   qr: string;
 
   @Column()
   password: string;
+
+  @Column({ unique: true})
+  numero_padron: number;
+
+  @Column()
+  manzana: string;
+
+  @Column()
+  lote: number;
+
+  @Column()
+  metros: string;
+
+  @Column()
+  lotes_detalle: string;
+
+  @Column()
+  lotes_cantidad: string;
 
   @Column({ nullable: true })
   notification_token: string;
@@ -39,6 +55,9 @@ export class User {
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
+
+  @OneToMany(() => Asistencia, asistencia => asistencia.user)
+  asistencias: Asistencia[];
 
   @JoinTable({
     name: 'user_has_roles',
@@ -51,6 +70,7 @@ export class User {
   })
   @ManyToMany(() => Rol, (rol) => rol.users)
   roles: Rol[];
+
 
   @BeforeInsert()
   async hashPassword() {

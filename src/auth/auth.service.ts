@@ -15,13 +15,7 @@ export class AuthService {
             @InjectRepository(Rol) private rolesRepository: Repository<Rol>,
             private jwtService: JwtService
             ) {}
-      async register(user: RegisterAuthDto) {
-            const emailExist = await this.usersRepository.findOneBy({ email: user.email });
-
-            if (emailExist) {
-                  throw new HttpException('El CORREO ya esta registrado', HttpStatus.CONFLICT);
-            }
-
+      async register(user: RegisterAuthDto) { 
             const dniExist = await this.usersRepository.findOneBy({ dni: user.dni });
 
             if (dniExist) {
@@ -58,13 +52,14 @@ export class AuthService {
       }
 
       async login(loginData: LoginAuthDto) {
-            const { email, password } = loginData;
+            const { dni, password } = loginData;
+            console.log("AUTHSERVICE", loginData);
             const userFound = await this.usersRepository.findOne({ 
-                  where: { email: email },
+                  where: { dni: dni },
                   relations: ['roles']
              });
             if (!userFound) {
-                  throw new HttpException('El EMAIL no esta registrado', HttpStatus.NOT_FOUND);
+                  throw new HttpException('El DNI no esta registrado', HttpStatus.NOT_FOUND);
             }
 
             const isPasswordValid = await compare(password, userFound.password);

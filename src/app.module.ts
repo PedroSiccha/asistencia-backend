@@ -7,6 +7,10 @@ import { User } from './users/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { RolesModule } from './roles/roles.module';
 import { Rol } from './roles/rol.entity';
+import { ReunionesModule } from './reuniones/reuniones.module';
+import { Reuniones } from './reuniones/reuniones.entity';
+import { AsistenciaModule } from './asistencia/asistencia.module';
+import { Asistencia } from './asistencia/asistencia.entity';
 
 
 @Module({
@@ -14,17 +18,19 @@ import { Rol } from './roles/rol.entity';
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.HOST || 'localhost',
-      port: parseInt(process.env.PORT) || 3306,
+      port: parseInt(process.env.PORT_DB) || 3306,
       username: process.env.USER || 'root', 
       password: process.env.PASSWORD || '1234',
       database: process.env.DATABASE || 'asistencia_db',
-      entities: [User, Rol],
+      entities: [User, Rol, Reuniones, Asistencia],
       synchronize: true,
     }),
     
     UsersModule,
     AuthModule,
     RolesModule,
+    ReunionesModule,
+    AsistenciaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
