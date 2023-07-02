@@ -11,17 +11,19 @@ import { ReunionesModule } from './reuniones/reuniones.module';
 import { Reuniones } from './reuniones/reuniones.entity';
 import { AsistenciaModule } from './asistencia/asistencia.module';
 import { Asistencia } from './asistencia/asistencia.entity';
+import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.HOST || 'localhost',
-      port: parseInt(process.env.PORT_DB) || 3306,
-      username: process.env.USER || 'root', 
-      password: process.env.PASSWORD || '1234',
-      database: process.env.DATABASE || 'asistencia_db',
+      host: process.env.HOST_DB,
+      port: parseInt(process.env.PORT_DB),
+      username: process.env.USER_DB, 
+      password: process.env.PASSWORD_DB,
+      database: process.env.DATABASE_DB,
       entities: [User, Rol, Reuniones, Asistencia],
       synchronize: true,
     }),

@@ -25,5 +25,12 @@ export class ReunionesController {
       findAll() {
             return this.reunionesService.findAll();
       }
+
+      @HasRoles(JwtRole.ADMIN, JwtRole.COLL)
+      @UseGuards(JwtAuthGuard, JwtRolesGuard)
+      @Get('last')
+      findLast() {
+            return this.reunionesService.findLast();
+      }
       
 }

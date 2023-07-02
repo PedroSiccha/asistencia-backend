@@ -3,4 +3,5 @@ export class CreateAsistenciaDto {
       hora: string;
       userId: number;
       reunionId: number;
+      dni: string;
 }

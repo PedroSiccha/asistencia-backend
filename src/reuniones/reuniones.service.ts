@@ -19,5 +19,20 @@ export class ReunionesService {
             const data = await this.reunionRepository.find();
             return data;
       }
+
+      async findLast() {
+            let data = [];
+            data = await this.reunionRepository.find({
+                  where: {
+                    estado: 'pendiente',
+                  },
+                  order: {
+                    fecha: 'DESC',
+                  },
+                  take: 1,
+                });
+              
+                return data[0];
+      }
       
 }

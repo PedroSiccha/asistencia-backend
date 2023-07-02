@@ -14,10 +14,10 @@ export class Asistencia {
       hora: string;
 
       @ManyToOne(() => User, user => user.asistencias)
-      @JoinTable({ name: 'id_user' })
+      @JoinTable({ name: 'userId' })
       user: User;
 
       @ManyToOne(() => Reuniones, reunion => reunion.asistencias)
-      @JoinTable({ name: 'id_reunion' })
+      @JoinTable({ name: 'reunionId' })
       reunion: Reuniones;
 }
