@@ -24,7 +24,7 @@ export class User {
   phone: string;
 
   @Column({ nullable: true })
-  qr: string;
+  image: string;
 
   @Column()
   password: string;

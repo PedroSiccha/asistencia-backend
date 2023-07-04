@@ -20,6 +20,19 @@ export class UsersService {
                   return this.usersRepository.save(newUser);
             }
 
+            async createWithImage(file: Express.Multer.File, user: CreateUserDto) {
+                  console.log("createWithImage", file);
+                  const url = await storage(file, file.originalname);
+
+                  if (url === undefined && url === null) {
+                        throw new HttpException('La imagen no se pudo guardar', HttpStatus.INTERNAL_SERVER_ERROR);
+                  }
+                  
+                  user.image = url;
+                  const newUser = this.usersRepository.create(user);
+                  return this.usersRepository.save(newUser);
+            }
+
             async findAll(){
                   const data = await this.usersRepository.find({ relations: ['roles'] });
                   for (const dt of data) {
@@ -29,6 +42,7 @@ export class UsersService {
             }
 
             async update(id: number, user: UpdateUserDto) {
+                  console.log("UsersService", user);
                   const userFound = await this.usersRepository.findOneBy({ id:id });
 
                   if (!userFound) {
@@ -40,6 +54,7 @@ export class UsersService {
             }
 
             async updateWithImage(file: Express.Multer.File, id: number, user: UpdateUserDto) {
+                  console.log("updateWithImage", file);
                   const url = await storage(file, file.originalname);
 
                   if (url === undefined && url === null) {

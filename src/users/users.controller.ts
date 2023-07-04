@@ -26,13 +26,30 @@ export class UsersController {
       }
 
       @UseGuards(JwtAuthGuard)
+      @Post('createWithImage')
+      @UseInterceptors(FileInterceptor('file'))
+      createWithImage(
+            @UploadedFile(
+                  new ParseFilePipe({
+                        validators: [
+                              new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 10 }), //Imagenes de 10 MEGAS
+                              new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' }),
+                        ],
+                  }),
+            ) file: Express.Multer.File,
+            @Body() user: CreateUserDto
+      ) {
+            return this.usersService.createWithImage(file, user);
+      }
+
+      @UseGuards(JwtAuthGuard)
       @Put(':id')
       update(@Param('id', ParseIntPipe) id: number, @Body() user: UpdateUserDto) {
             return this.usersService.update(id, user);
       }
 
       @UseGuards(JwtAuthGuard)
-      @Post('updateWithImage/:id')
+      @Put('updateWithImage/:id')
       @UseInterceptors(FileInterceptor('file'))
       updateWithImage(
             @UploadedFile(

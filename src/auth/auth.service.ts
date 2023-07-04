@@ -16,6 +16,7 @@ export class AuthService {
             private jwtService: JwtService
             ) {}
       async register(user: RegisterAuthDto) { 
+            console.log("AuthService", user);
             const dniExist = await this.usersRepository.findOneBy({ dni: user.dni });
 
             if (dniExist) {
