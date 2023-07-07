@@ -15,21 +15,45 @@ export class UsersService {
             @InjectRepository(User) private usersRepository: Repository<User>
             ) {}
 
-            create(user: CreateUserDto) {
+            async create(user: CreateUserDto) {
+                  const userFound = await this.usersRepository.findOneBy({ dni: user.dni });
+
+                  if (userFound) {
+                        throw new HttpException('El DNI ya fué registrado', HttpStatus.NOT_FOUND);
+                  }
+
+                  const userNFound = await this.usersRepository.findOneBy({ numero_padron: user.numero_padron });
+
+                  if (userNFound) {
+                        throw new HttpException('El Número de padrón ya fué registrado', HttpStatus.NOT_FOUND);
+                  }
                   const newUser = this.usersRepository.create(user);
                   return this.usersRepository.save(newUser);
             }
 
             async createWithImage(file: Express.Multer.File, user: CreateUserDto) {
-                  console.log("createWithImage", file);
+                  console.log("createWithImage_1", file);
                   const url = await storage(file, file.originalname);
+
+                  const userFound = await this.usersRepository.findOneBy({ dni: user.dni });
+
+                  if (userFound) {
+                        throw new HttpException('El DNI ya fué registrado', HttpStatus.NOT_FOUND);
+                  }
+
+                  const userNFound = await this.usersRepository.findOneBy({ numero_padron: user.numero_padron });
+
+                  if (userNFound) {
+                        throw new HttpException('El Número de padrón ya fué registrado', HttpStatus.NOT_FOUND);
+                  }
 
                   if (url === undefined && url === null) {
                         throw new HttpException('La imagen no se pudo guardar', HttpStatus.INTERNAL_SERVER_ERROR);
                   }
-                  
+                  console.log("createWithImage", url)
                   user.image = url;
                   const newUser = this.usersRepository.create(user);
+                  console.log("createWithImage", newUser)
                   return this.usersRepository.save(newUser);
             }
 

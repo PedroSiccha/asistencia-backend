@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateReunionDto } from './dto/create-reunion.dto'
 import { InjectRepository } from '@nestjs/typeorm';
 import { Reuniones } from './reuniones.entity';
 import { Repository } from 'typeorm';
+import { UpdateReunionDto } from './dto/update-reunion.dto';
 
 @Injectable()
 export class ReunionesService {
@@ -16,6 +17,18 @@ export class ReunionesService {
       }
 
       async findAll() {
+            const data = await this.reunionRepository.find({
+                  where: {
+                    estado: 'pendiente',
+                  },
+                  order: {
+                    fecha: 'DESC',
+                  }
+                });
+            return data;
+      }
+
+      async findAllReuniones() {
             const data = await this.reunionRepository.find();
             return data;
       }
@@ -33,6 +46,18 @@ export class ReunionesService {
                 });
               
                 return data[0];
+      }
+
+      async closeReunion(id: number, reunion: UpdateReunionDto) {
+            console.log("UPDATEREUNION", reunion);
+            const reunionFound = await this.reunionRepository.findOneBy({ id:id });
+
+            if (!reunionFound) {
+                  throw new HttpException('La reunión no existe', HttpStatus.NOT_FOUND);
+            }
+
+            reunionFound.estado = reunion.estado;
+            return this.reunionRepository.save(reunionFound);
       }
       
 }
