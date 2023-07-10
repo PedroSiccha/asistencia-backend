@@ -48,6 +48,13 @@ export class UsersController {
             return this.usersService.update(id, user);
       }
 
+      @HasRoles(JwtRole.ADMIN, JwtRole.COLL)
+      @UseGuards(JwtAuthGuard, JwtRolesGuard)
+      @Get('search/:dato')
+      findByName(@Param('dato') dato: string) {
+            return this.usersService.findByName(dato);
+      }
+
       @UseGuards(JwtAuthGuard)
       @Put('updateWithImage/:id')
       @UseInterceptors(FileInterceptor('file'))

@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./user.entity";
-import { In, Repository } from "typeorm";
+import { In, Like, Repository } from "typeorm";
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import storage = require ("../utils/cloud_storage.js");
@@ -58,11 +58,26 @@ export class UsersService {
             }
 
             async findAll(){
-                  const data = await this.usersRepository.find({ relations: ['roles'] });
+                  const data = await this.usersRepository.find(
+                        { 
+                              relations: ['roles'], 
+                              order: { numero_padron: 'ASC', } 
+                        });
                   for (const dt of data) {
                         delete dt.password;
                   }
                   return data;
+            }
+
+            async findByName(dato: string) {
+                  return await this.usersRepository.find({
+                        where: [
+                              { name: Like(`%${ dato }%`) },
+                              { lastname: Like(`%${ dato }%`) },
+                              { dni: Like(`%${ dato }%`) },
+                        ]
+                        
+                  });
             }
 
             async update(id: number, user: UpdateUserDto) {
